@@ -3,8 +3,12 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import routes from './routes';
+import swaggerUi from 'swagger-ui-express'
+import { swaggerSpec } from './swagger'
 
 dotenv.config();
+
+const securityWOW = true
 
 const app = express();
 const prisma = new PrismaClient();
@@ -18,10 +22,14 @@ app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
+if (securityWOW) {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
+
 const port = process.env.PORT || 3000;
 
-app.listen(3000, () => {
-  console.log(`Server running on port 3000`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
 
 export { app, prisma };

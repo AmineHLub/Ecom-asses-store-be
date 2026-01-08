@@ -5,6 +5,7 @@ import { createEducationalProducts } from './utils/generator'
 const prisma = new PrismaClient()
 const router = Router()
 
+
 router.post('/products', async (req, res) => {
   try {
     const data = req.body
@@ -28,6 +29,30 @@ router.post('/products', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Create failed', details: String(err) })
   }
+
+  // add swagger doc here
+  /**
+   * @swagger
+   * /products:
+   *   post:
+   *     summary: Create a new product
+   *     tags: [Products]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Product'
+   *     responses:
+   *       200:
+   *         description: The created product.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Product'
+   *       500:
+   *         description: Create failed
+   */
 })
 
 router.get('/products', async (req, res) => {
@@ -86,6 +111,36 @@ router.get('/products', async (req, res) => {
       details: String(err)
     })
   }
+
+  // add swagger doc here
+  /**
+   * @swagger
+   * /products:
+   *   get:
+   *     summary: Get a paginated list of products
+   *     tags: [Products]
+   *     parameters:
+   *       - in: query
+   *         name: page
+   *         schema:
+   *           type: integer
+   *         description: Page number (default is 1)
+   *       - in: query
+   *         name: per_page
+   *         schema:
+   *           type: integer
+   *         description: Number of items per page (default is 20, max is 100)
+   *       - in: query
+   *         name: category
+   *         schema:
+   *           type: string
+   *         description: Filter products by category
+   *       - in: query
+   *         name: search
+   *         schema:
+   *           type: string
+   *         description: Search products by title
+   */
 })
 
 
@@ -102,6 +157,31 @@ router.get('/products/:id', async (req, res) => {
   }
 
   res.json(product)
+
+  // add swagger doc here
+  /**
+   * @swagger
+   * /products/{id}:
+   *   get:
+   *     summary: Get a product by ID
+   *     tags: [Products]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: The product ID
+   *     responses:
+   *       200:
+   *         description: The product data.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Product'
+   *       404:
+   *         description: Product not found
+   */
 })
 
 
@@ -131,6 +211,37 @@ router.put('/products/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Update failed', details: String(err) })
   }
+
+  // add swagger doc here
+  /**
+   * @swagger
+   * /products/{id}:
+   *   put:
+   *     summary: Update a product by ID
+   *     tags: [Products]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: The product ID
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Product'
+   *     responses:
+   *       200:
+   *         description: The updated product.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Product'
+   *       500:
+   *         description: Update failed
+   */
 })
 
 // UPDATE PATCH
@@ -148,6 +259,37 @@ router.patch('/products/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Update failed', details: String(err) })
   }
+
+  // add swagger doc here
+  /**
+   * @swagger
+   * /products/{id}:
+   *   patch:
+   *     summary: Partially update a product by ID
+   *     tags: [Products]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: The product ID
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Product'
+   *     responses:
+   *       200:
+   *         description: The updated product.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Product'
+   *       500:
+   *         description: Update failed
+   */
 })
 
 
@@ -164,6 +306,27 @@ router.delete('/products/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Delete failed', details: String(err) })
   }
+
+  // add swagger doc here
+  /**
+   * @swagger
+   * /products/{id}:
+   *   delete:
+   *     summary: Delete a product by ID
+   *     tags: [Products]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: The product ID
+   *     responses:
+   *       200:
+   *         description: Product deleted successfully.
+   *       500:
+   *         description: Delete failed
+   */
 })
 
 router.post('/products/createbunchrandom', async (req, res) => {
@@ -185,7 +348,40 @@ router.post('/products/createbunchrandom', async (req, res) => {
       details: String(err)
     })
   }
+
+  // add swagger doc here
+  /**
+   * @swagger
+   * /products/createbunchrandom:
+   *   post:
+   *     summary: Create a bunch of random educational products
+   *     tags: [Products]
+   *     responses:
+   *       200:
+   *         description: Bulk product creation result.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 inserted:
+   *                   type: integer
+   *                   description: Number of products inserted
+   *                 totalGenerated:
+   *                   type: integer
+   *                   description: Total number of products generated
+   *       500:
+   *         description: Bulk product creation failed
+   */
 })
+
+// add swagger doc tags here
+/**
+ * @swagger
+ * tags:
+ *   name: Products
+ *   description: API for products in the store
+ */
 
 
 export default router
