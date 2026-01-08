@@ -33,17 +33,38 @@ router.post('/products', async (req, res) => {
 router.get('/products', async (req, res) => {
   try {
     const page = Math.max(Number(req.query.page) || 1, 1)
-    const perPage = Math.min(Math.max(Number(req.query.per_page) || 20, 1), 100)
+    const perPage = Math.min(
+      Math.max(Number(req.query.per_page) || 20, 1),
+      100
+    )
+
+    const category = typeof req.query.category === 'string'
+      ? req.query.category
+      : undefined
+
+    const search = typeof req.query.search === 'string'
+      ? req.query.search
+      : undefined
 
     const skip = (page - 1) * perPage
 
+    const where = {
+      ...(category && { category }),
+      ...(search && {
+        title: {
+          contains: search,
+        }
+      })
+    }
+
     const [items, total] = await Promise.all([
       prisma.product.findMany({
+        where,
         skip,
         take: perPage,
         orderBy: { createdAt: 'desc' }
       }),
-      prisma.product.count()
+      prisma.product.count({ where })
     ])
 
     const totalPages = Math.ceil(total / perPage)
